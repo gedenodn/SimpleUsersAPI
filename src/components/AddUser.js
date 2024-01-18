@@ -4,39 +4,47 @@ class AddUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: this.props.user ? this.props.user.firstName : "",
-      lastName: this.props.user ? this.props.user.lastName : "",
-      bio: this.props.user ? this.props.user.bio : "",
-      age: this.props.user ? this.props.user.age : 1,
+      first_name: this.props.user ? this.props.user.first_name : "",
+      last_name: this.props.user ? this.props.user.last_name : "",
+      email: this.props.user ? this.props.user.email : "",
+      avatar: this.props.user ? this.props.user.avatar : null,
       isHappy: this.props.user ? this.props.user.isHappy : false,
     };
   }
 
+  handleFileChange = (e) => {
+    const file = e.target.files[0];
+    this.readFile(file);
+  };
+
+  readFile = (file) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      this.setState({ avatar: reader.result });
+    };
+    reader.readAsDataURL(file);
+  };
+
   render() {
     return (
-      <form
-        ref={(el) => (this.myForm = el)}
-      >
+      <form ref={(el) => (this.myForm = el)}>
         <input
-          placeholder="Name"
-          value={this.state.firstName}
-          onChange={(e) => this.setState({ firstName: e.target.value })}
+          placeholder="First Name"
+          value={this.state.first_name}
+          onChange={(e) => this.setState({ first_name: e.target.value })}
         />
         <input
           placeholder="Last Name"
-          value={this.state.lastName}
-          onChange={(e) => this.setState({ lastName: e.target.value })}
-        />
-        <textarea
-          placeholder="Biography"
-          value={this.state.bio}
-          onChange={(e) => this.setState({ bio: e.target.value })}
+          value={this.state.last_name}
+          onChange={(e) => this.setState({ last_name: e.target.value })}
         />
         <input
-          placeholder="Age"
-          value={this.state.age}
-          onChange={(e) => this.setState({ age: e.target.value })}
+          placeholder="Email"
+          value={this.state.email}
+          onChange={(e) => this.setState({ email: e.target.value })}
         />
+       
+        <input type="file" accept="image/*" onChange={this.handleFileChange} />
         <label htmlFor="isHappy">Happy?</label>
         <input
           type="checkbox"
@@ -47,14 +55,24 @@ class AddUser extends React.Component {
         <button
           type="button"
           onClick={() => {
-            this.props.onAdd({
-              id: this.props.user ? this.props.user.id : undefined,
-              firstName: this.state.firstName,
-              lastName: this.state.lastName,
-              bio: this.state.bio,
-              age: this.state.age,
+           
+            const user = {
+              first_name: this.state.first_name,
+              last_name: this.state.last_name,
+              email: this.state.email,
+              avatar: this.state.avatar,
               isHappy: this.state.isHappy,
-            });
+            };
+
+            
+            if (this.props.user) {
+              user.id = this.props.user.id;
+            }
+
+           
+            this.props.onAdd(user);
+
+            
             this.myForm.reset();
           }}
         >

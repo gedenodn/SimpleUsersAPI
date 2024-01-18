@@ -1,5 +1,5 @@
 import React from "react";
-import { IoCloseCircleSharp, IoHammerSharp } from 'react-icons/io5'
+import { IoCloseCircleSharp, IoHammerSharp } from 'react-icons/io5';
 import AddUser from "./AddUser";
 
 class User extends React.Component {
@@ -9,10 +9,9 @@ class User extends React.Component {
       editForm: false,
     };
   }
-  user = this.props.user;
 
   render() {
-    const { id, firstName, lastName, bio, isHappy } = this.props.user;
+    const { id, first_name, last_name, email, isHappy, avatar } = this.props.user;
 
     return (
       <div className="user">
@@ -30,14 +29,15 @@ class User extends React.Component {
           className="edit-icon"
         />
         <h3>
-          {firstName} {lastName}
+          {first_name} {last_name}
         </h3>
-        <p>{bio}</p>
+        <img src={avatar} alt={`${first_name}'s avatar`} />
+        <p>{email}</p>
         <b>{isHappy ? 'Happy :)' : 'So so :('}</b>
 
         {this.state.editForm && (
           <AddUser
-            user={this.user}
+            user={this.props.user}
             onAdd={(updatedUser) => {
               this.props.onEdit(updatedUser);
               this.setState({ editForm: false });
